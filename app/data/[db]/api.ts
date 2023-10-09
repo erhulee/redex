@@ -45,11 +45,7 @@ export async function getKeyValue(currentDB: number | string, key: string) {
             cache: "no-store",
         })
     ).json();
-    return {
-        value: data.data,
-        expire: data.expire,
-        type: data.type
-    }
+    return data;
 }
 export async function createKey(key: RedisKey, type: RedisKeyType.String, currentDB: number | string): Promise<any>;
 export async function createKey(key: RedisKey, type: RedisKeyType, currentDB: number | string) {
@@ -59,6 +55,21 @@ export async function createKey(key: RedisKey, type: RedisKeyType, currentDB: nu
     }
     const response = await (await fetch(`http://localhost:3000/data/${currentDB}/${key}`, {
         method: "put",
+        headers: {
+            'Content-Type': 'application/json'
+        },
+        body: JSON.stringify(data)
+    })).json();
+    return response
+}
+
+export async function setKeyValue(currentDB: number | string, key: string, type: string, value: any) {
+    const data = {
+        type,
+        value
+    }
+    const response = await (await fetch(`http://localhost:3000/data/${currentDB}/${key}/value`, {
+        method: "post",
         headers: {
             'Content-Type': 'application/json'
         },

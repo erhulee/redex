@@ -43,9 +43,10 @@ export default function DashBoard(props: Props) {
     queryKey: ["key_value", db, key],
     queryFn: ({ queryKey }) => {
       const [_, db, key] = queryKey;
-      return getKeyValue(db, key);
+      return getKeyValue(db!, key!);
     },
   });
+  console.log(valueQuery.data);
 
   const createKey2 = (key: string, type: any) => {
     return createOneKey(key, type, db);
@@ -64,13 +65,17 @@ export default function DashBoard(props: Props) {
         onChange={setPattern}
         onCreate={createKey2}
       ></KeyList>
-      <KVEditor
-        type={valueQuery.data?.type}
-        db={db}
-        value={valueQuery.data?.value}
-        keyExpire={valueQuery.data?.expire}
-        keyName={key}
-      ></KVEditor>
+      {valueQuery.isLoading ? (
+        <div>spin</div>
+      ) : (
+        <KVEditor
+          type={valueQuery.data?.type}
+          db={db}
+          value={valueQuery.data?.value}
+          keyExpire={valueQuery.data?.expire}
+          keyName={key!}
+        ></KVEditor>
+      )}
     </div>
   );
 }

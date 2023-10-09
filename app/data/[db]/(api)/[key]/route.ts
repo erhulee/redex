@@ -20,9 +20,10 @@ export async function GET(request: Request, ctx: { params: { key: string } }) {
     const ttl = await redis.ttl(key);
     return Response.json({
         data: {
+            key: key,
             type: type,
             expire: ttl,
-            data: result
+            value: result,
         }
     })
 }

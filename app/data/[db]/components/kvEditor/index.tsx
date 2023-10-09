@@ -6,14 +6,14 @@ import ListEditor from "./listEditor";
 import SetEditor from "./setEditor";
 import StringEditor from "./stringEditor";
 import { Editor } from "./type";
+import { setKeyValue } from "../../api";
 
 function KVEditor(props: Editor.EditorProps) {
   const { db, keyName, value, keyExpire, type } = props;
-  const handleChangeName = (value: string) => {
-    console.log(value);
+  const handleChangeName = (type: string, value: string) => {
+    setKeyValue(db, keyName, "string", value);
   };
 
-  console.log("props: ", props);
   const handleChangeExpire = (expire: number) => {};
 
   const handleChangeValue = (value: any) => {};
@@ -26,7 +26,7 @@ function KVEditor(props: Editor.EditorProps) {
             value={props.value}
             handleChangeExpire={handleChangeExpire}
             handleChangeName={handleChangeName}
-            handleChangeValue={handleChangeName}
+            handleChangeValue={(value) => handleChangeName("string", value)}
           ></StringEditor>
         );
       case "hash":
