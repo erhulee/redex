@@ -1,0 +1,4 @@
+.active-item {
+    border-right: solid 2px;
+    border-color: rgb(53, 106, 230);
+}
