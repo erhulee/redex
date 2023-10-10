@@ -14,7 +14,7 @@ import Spin from "./components/spin";
 import { EnvContextProvider } from "./context";
 type Props = {
   params: {
-    db: string;
+    db: number;
   };
   searchParams: {
     key?: string;
@@ -35,6 +35,7 @@ export default function DashBoard(props: Props) {
   const dbQuery = useQuery({
     queryKey: ["db_info"],
     queryFn: getCurrentDBInfo,
+    refetchOnWindowFocus: false,
     placeholderData: { currentDB: 0, DBListData: [] },
   });
 
@@ -45,6 +46,7 @@ export default function DashBoard(props: Props) {
       const pattern = queryKey[2];
       return getCurrentDBKeys(db, pattern);
     },
+    refetchOnWindowFocus: false,
     placeholderData: { keysData: [] },
   });
 
@@ -54,6 +56,7 @@ export default function DashBoard(props: Props) {
       const [_, db, key] = queryKey;
       return getKeyValue(db!, key!);
     },
+    refetchOnWindowFocus: false,
   });
 
   const createKey2 = (key: string, type: any) => {
@@ -83,6 +86,7 @@ export default function DashBoard(props: Props) {
             value={valueQuery.data?.value}
             keyExpire={valueQuery.data?.expire}
             keyName={key!}
+            refetch={valueQuery.refetch}
           ></KVEditor>
         )}
       </div>

@@ -7,17 +7,25 @@ import StringEditor from "./stringEditor";
 import { Editor } from "./type";
 import Error from "./error";
 import { setExpire } from "../../api/expire";
-import { deleteKey } from "../../api/key";
+import { deleteKey, setName } from "../../api/key";
+import { setKeyValue } from "../../api";
 
-function KVEditor(props: Editor.EditorProps) {
-  const { db, keyName, value, keyExpire, type } = props;
-  const handleChangeName = () => {};
+function KVEditor(props: Editor.EditorProps & { refetch: () => void }) {
+  const { db, keyName, keyExpire, type, refetch } = props;
+  const handleChangeName = (name: string) => {
+    setName(keyName, db, name);
+  };
 
   const handleChangeExpire = (expire: number) => {
     setExpire(keyName, db, expire);
   };
 
-  const handleChangeValue = (value: any) => {};
+  const handleChangeValue = (type: string, value: any) => {
+    switch (type) {
+      case "string":
+        setKeyValue(db, keyName, type, value);
+    }
+  };
   const handleDeleteKey = () => {
     deleteKey(keyName, db);
   };
@@ -28,7 +36,7 @@ function KVEditor(props: Editor.EditorProps) {
         return (
           <StringEditor
             value={props.value}
-            handleChangeValue={(value) => handleChangeValue(value)}
+            handleChangeValue={(value) => handleChangeValue("string", value)}
           ></StringEditor>
         );
       case "hash":
@@ -56,6 +64,7 @@ function KVEditor(props: Editor.EditorProps) {
         handleChangeExpire={handleChangeExpire}
         handleChangeName={handleChangeName}
         handleDeleteKey={handleDeleteKey}
+        handleRefetch={refetch}
       ></BaseInfoBar>
       {editorInstance()}
     </div>

@@ -12,6 +12,7 @@ export namespace Editor {
         handleChangeExpire: (expire: number) => void
         handleChangeValue: (value: T) => void
         handleDeleteKey: () => void;
+        handleRefetch: () => void;
     }
 
     type BaseEditorProps<T> = EditorProps<T> & Pick<EditorController<T>, "handleChangeValue">

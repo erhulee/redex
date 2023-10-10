@@ -77,3 +77,7 @@ export async function setKeyValue(currentDB: number | string, key: string, type:
     })).json();
     return response
 }
+
+export async function deleteKey(key: RedisKey, currentDB: number | string) {
+    
+}

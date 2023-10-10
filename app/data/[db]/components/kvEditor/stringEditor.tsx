@@ -4,7 +4,7 @@ import "ace-builds/src-noconflict/mode-json";
 import "ace-builds/src-noconflict/theme-dracula";
 import "ace-builds/src-noconflict/ext-language_tools";
 import { Editor } from "./type";
-import { Button } from "antd";
+import { Button, Switch } from "antd";
 import { CheckOutlined } from "@ant-design/icons";
 function StringEditor(props: Editor.StringEditorProps) {
   const { handleChangeValue, value: originValue } = props;
@@ -13,7 +13,12 @@ function StringEditor(props: Editor.StringEditorProps) {
     setValue(props.value);
   }, [props.value]);
   return (
-    <>
+    <div>
+      {/* <div className=" bg-slate-400 flex flex-row gap-3 items-center ">
+        <div className=" text-white text-sm p-2">JSON 编辑模式</div>
+        <Switch />
+      </div> */}
+
       <AceEditor
         mode="json"
         theme="dracula"
@@ -39,7 +44,7 @@ function StringEditor(props: Editor.StringEditorProps) {
           保存
         </Button>
       </div>
-    </>
+    </div>
   );
 }
 

@@ -5,8 +5,7 @@ export function setExpire(key: string, currentDB: number, expire: number) {
         expire
     })
 }
-
-export function setName(key: string, currentDB: number, name: number) {
+export function setName(key: string, currentDB: number, name: string) {
     return post(`/data/${currentDB}/${key}/name`, {
         name
     })
