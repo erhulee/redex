@@ -1,22 +1,26 @@
 "use client";
-import { usePathname } from "next/navigation";
 import BaseInfoBar from "./baseInfoBar";
 import HashEditor from "./hashEditor";
 import ListEditor from "./listEditor";
 import SetEditor from "./setEditor";
 import StringEditor from "./stringEditor";
 import { Editor } from "./type";
-import { setKeyValue } from "../../api";
+import Error from "./error";
+import { setExpire } from "../../api/expire";
+import { deleteKey } from "../../api/key";
 
 function KVEditor(props: Editor.EditorProps) {
   const { db, keyName, value, keyExpire, type } = props;
-  const handleChangeName = (type: string, value: string) => {
-    setKeyValue(db, keyName, "string", value);
+  const handleChangeName = () => {};
+
+  const handleChangeExpire = (expire: number) => {
+    setExpire(keyName, db, expire);
   };
 
-  const handleChangeExpire = (expire: number) => {};
-
   const handleChangeValue = (value: any) => {};
+  const handleDeleteKey = () => {
+    deleteKey(keyName, db);
+  };
 
   const editorInstance = () => {
     switch (props.type) {
@@ -24,9 +28,7 @@ function KVEditor(props: Editor.EditorProps) {
         return (
           <StringEditor
             value={props.value}
-            handleChangeExpire={handleChangeExpire}
-            handleChangeName={handleChangeName}
-            handleChangeValue={(value) => handleChangeName("string", value)}
+            handleChangeValue={(value) => handleChangeValue(value)}
           ></StringEditor>
         );
       case "hash":
@@ -34,14 +36,14 @@ function KVEditor(props: Editor.EditorProps) {
           <HashEditor
             value={props.value}
             handleChangeExpire={handleChangeExpire}
-            handleChangeName={handleChangeName}
-            handleChangeValue={handleChangeName}
           ></HashEditor>
         );
       case "list":
         return <ListEditor></ListEditor>;
       case "set":
         return <SetEditor></SetEditor>;
+      default:
+        return <Error></Error>;
     }
   };
 
@@ -51,6 +53,9 @@ function KVEditor(props: Editor.EditorProps) {
         keyExpire={keyExpire}
         keyName={keyName}
         type={type}
+        handleChangeExpire={handleChangeExpire}
+        handleChangeName={handleChangeName}
+        handleDeleteKey={handleDeleteKey}
       ></BaseInfoBar>
       {editorInstance()}
     </div>

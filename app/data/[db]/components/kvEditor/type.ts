@@ -3,7 +3,7 @@ export namespace Editor {
         type: string
         // 相当于编辑器的初始值
         value: T
-        db: string
+        db: number
         keyName: string
         keyExpire: number
     }
@@ -11,9 +11,10 @@ export namespace Editor {
         handleChangeName: (name: string) => void
         handleChangeExpire: (expire: number) => void
         handleChangeValue: (value: T) => void
+        handleDeleteKey: () => void;
     }
 
-    type BaseEditorProps<T> = EditorProps<T> & EditorController<T>
+    type BaseEditorProps<T> = EditorProps<T> & Pick<EditorController<T>, "handleChangeValue">
     type ListData = Array<{
         id: string
         value: string

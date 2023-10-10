@@ -51,7 +51,14 @@ export async function PUT(request: Request, ctx: { params: { key: string, db: nu
             data: result
         }
     })
+}
 
+export async function DELETE(request: Request, ctx: { params: { key: string, db: number } }) {
+    const { db, key } = ctx.params;
+    const redis = MRedis.getRedisByIndex(db);
+    return Response.json({
+        data: await redis.del(key)
+    })
 }
 
 
