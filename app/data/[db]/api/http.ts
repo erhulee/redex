@@ -34,7 +34,9 @@ export function del(url: string, data: Record<string, any>) {
     })
 }
 
-export function get(url: string) {
+export async function get(url: string) {
     const endpoint = baseURL + url;
-    return fetch(endpoint)
+    return (await fetch(endpoint, {
+        cache: "no-store"
+    })).json()
 }

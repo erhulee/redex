@@ -8,6 +8,11 @@ export default function RootLayout({
   children: React.ReactNode;
 }) {
   return (
-    <QueryClientProvider client={queryClient}>{children}</QueryClientProvider>
+    <QueryClientProvider client={queryClient}>
+      <div className=" flex flex-col">
+        <div className=" font-semibold p-2 text-lg ">数据管理</div>
+        <div className=" flex-1"> {children}</div>
+      </div>
+    </QueryClientProvider>
   );
 }

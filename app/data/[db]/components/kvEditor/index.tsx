@@ -2,16 +2,17 @@
 import BaseInfoBar from "./baseInfoBar";
 import HashEditor from "./hashEditor";
 import ListEditor from "./listEditor";
-import SetEditor from "./setEditor";
 import StringEditor from "./stringEditor";
 import { Editor } from "./type";
 import Error from "./error";
 import { setExpire } from "../../api/expire";
 import { deleteKey, setName } from "../../api/key";
 import { setKeyValue } from "../../api";
+import SetEditor from "./SetEditor";
 
 function KVEditor(props: Editor.EditorProps & { refetch: () => void }) {
   const { db, keyName, keyExpire, type, refetch } = props;
+  console.log(props);
   const handleChangeName = (name: string) => {
     setName(keyName, db, name);
   };
@@ -47,7 +48,7 @@ function KVEditor(props: Editor.EditorProps & { refetch: () => void }) {
           ></HashEditor>
         );
       case "list":
-        return <ListEditor></ListEditor>;
+        return <ListEditor value={props.value}></ListEditor>;
       case "set":
         return <SetEditor></SetEditor>;
       default:

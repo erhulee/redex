@@ -46,32 +46,36 @@ export async function POST(request: Request, ctx: { params: { key: string, db: n
 }
 
 
-// export async function GET(request: Request, ctx: { params: { key: string } }) {
-//     const redis = MRedis.instance;
-//     const key = ctx.params.key;
-//     const type = await redis.type(key);
-//     let result = null
-//     switch (type) {
-//         case "hash":
-//             result = await redis.hgetall(key)
-//             break;
-//         case "string":
-//             result = await redis.get(key)
-//             break;
-//         case 'list':
-//             let length = await redis.llen(key);
-//             result = await redis.lrange(key, 0, length - 1);
-//     }
+export async function GET(request: Request, ctx: { params: { key: string } }) {
+    const redis = MRedis.instance;
+    const key = ctx.params.key;
+    const type = await redis.type(key);
+    let result = null
+    switch (type) {
+        case "hash":
+            result = await redis.hgetall(key)
+            break;
+        case "string":
+            result = await redis.get(key)
+            break;
+        case 'list':
+            let length = await redis.llen(key);
+            const list = await redis.lrange(key, 0, length - 1);
+            result = {
+                count: length,
+                value: list.map((val, index) => ({ value: val, id: index }))
+            }
+    }
 
-//     const ttl = await redis.ttl(key);
-//     return Response.json({
-//         data: {
-//             key: key,
-//             type: type,
-//             expire: ttl,
-//             value: result
-//         }
-//     })
-// }
+    const ttl = await redis.ttl(key);
+    return Response.json({
+        data: {
+            key: key,
+            type: type,
+            expire: ttl,
+            value: result
+        }
+    })
+}
 
 

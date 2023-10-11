@@ -5,14 +5,19 @@ import useModal from "@/app/data/hooks/useModal";
 import { useState } from "react";
 
 type Props = {
-  value: Array<{
-    id: number;
-    value: string;
-  }>;
+  value: {
+    count: number;
+    value: Array<{
+      id: number;
+      value: string;
+    }>;
+  };
+
   handleChange: () => {};
 };
 function ListEditor(props: Props) {
-  const dataSource = props.value;
+  const dataSource = props.value.value;
+  console.log("dataSource:", dataSource);
   const [visible, toggle] = useModal();
   const [jsonData, setJSONData] = useState("");
   const [insertType, setInsertType] = useState("left");

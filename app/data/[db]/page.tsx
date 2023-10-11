@@ -6,12 +6,12 @@ import {
   createKey as createOneKey,
   getCurrentDBInfo,
   getCurrentDBKeys,
-  getKeyValue,
 } from "./api";
 import { useQuery } from "@tanstack/react-query";
 import { useMemo, useState } from "react";
 import Spin from "./components/spin";
 import { EnvContextProvider } from "./context";
+import { getKeyValue } from "./api/key";
 type Props = {
   params: {
     db: number;
@@ -54,17 +54,19 @@ export default function DashBoard(props: Props) {
     queryKey: ["key_value", db, key],
     queryFn: ({ queryKey }) => {
       const [_, db, key] = queryKey;
-      return getKeyValue(db!, key!);
+      return getKeyValue(key, db);
     },
     refetchOnWindowFocus: false,
   });
+
+  console.log("valueQuery:", valueQuery.data);
 
   const createKey2 = (key: string, type: any) => {
     return createOneKey(key, type, db);
   };
   return (
     <EnvContextProvider value={env}>
-      <div className="flex flex-row h-full">
+      <div className="flex flex-row h-full ">
         <DBList
           currentDB={dbQuery.data.currentDB}
           list={dbQuery.data.DBListData}
@@ -81,10 +83,10 @@ export default function DashBoard(props: Props) {
           <Spin></Spin>
         ) : (
           <KVEditor
-            type={valueQuery.data?.type}
+            type={valueQuery.data?.data.type}
             db={db}
-            value={valueQuery.data?.value}
-            keyExpire={valueQuery.data?.expire}
+            value={valueQuery.data?.data?.value}
+            keyExpire={valueQuery.data?.data.expire}
             keyName={key!}
             refetch={valueQuery.refetch}
           ></KVEditor>
