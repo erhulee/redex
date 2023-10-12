@@ -57,7 +57,7 @@ function KVEditor(props: Editor.EditorProps & { refetch: () => void }) {
   };
 
   return (
-    <div className="mt-4 ml-4 flex-1 px-4 ">
+    <div className="mt-4 ml-4 px-4 ">
       <BaseInfoBar
         keyExpire={keyExpire}
         keyName={keyName}

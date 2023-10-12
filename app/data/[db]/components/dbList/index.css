@@ -1,4 +1,3 @@
 .active-item {
-    border-right: solid 2px;
-    border-color: rgb(53, 106, 230);
+    background-color: rgba(121, 154, 231, 0.162);
 }

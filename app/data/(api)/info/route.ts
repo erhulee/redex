@@ -9,6 +9,7 @@ export async function GET(request: Request) {
     for (let i = 0; i < Number(databases); i++) {
         await redis.select(i);
         const keys = await redis.dbsize();
+
         result.push({
             name: `db${i}`,
             value: i,
@@ -16,5 +17,5 @@ export async function GET(request: Request) {
         })
     }
     await redis.select(currentDB)
-    return Response.json({ currentDB: currentDB, DBList: result })
+    return Response.json({ currentDB: currentDB, DBList: result.filter(({ keys }) => keys) })
 }

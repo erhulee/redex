@@ -1,5 +1,4 @@
 import React from "react";
-import "./index.css";
 import Link from "next/link";
 import { Button, Tree } from "antd";
 import { DownOutlined } from "@ant-design/icons";
@@ -14,7 +13,7 @@ type Props = {
   className?: string;
   currentDB: number;
 };
-const DBList: React.FC<Props> = (props: Props) => {
+const ConnectList: React.FC<Props> = (props: Props) => {
   const { list } = props;
   const treeData: DataNode[] = [
     {
@@ -36,22 +35,20 @@ const DBList: React.FC<Props> = (props: Props) => {
   ];
 
   return (
-    <div className={`${props.className} w-44 mt-6 px-4 `}>
+    <div className={`${props.className} w-44 mt-4 px-4 `}>
       <span className=" font-semibold mb-2 border-b-2 pb-1 block border-primary-500">
-        当前数据库
+        当前链接池
       </span>
-      {list.map((item, index) => (
-        <Link href={`/data/${index}`}>
-          <div
-            className={`${
-              item.value == props.currentDB ? "active-item" : ""
-            } text-sm px-4 py-1 w-full font-light rounded hover:bg-slate-100`}
-            key={item.name}
-          >{`${item.name}(${item.keys})`}</div>
-        </Link>
-      ))}
+
+      <Tree
+        showIcon
+        defaultExpandAll
+        treeData={treeData}
+        defaultSelectedKeys={["0-0-0"]}
+        switcherIcon={<DownOutlined />}
+      ></Tree>
     </div>
   );
 };
 
-export default DBList;
+export default ConnectList;

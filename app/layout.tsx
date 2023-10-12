@@ -2,8 +2,7 @@ import "./globals.css";
 import type { Metadata } from "next";
 import StyledComponentsRegistry from "../lib/AntdRegistry";
 import Link from "next/link";
-import RedisIcon from "./icons/redisIcon";
-import { Button } from "antd";
+import RedisIcon from "./icons/RedisIcon";
 import GitHubIcon from "./icons/GithubIcon";
 import HomeIcon from "./icons/HomeIcon";
 import DataAnalyzeIcon from "./icons/DataAnalyzeIcon";
@@ -20,24 +19,24 @@ export default function RootLayout({
   return (
     <html lang="zh">
       <body className="flex h-screen">
-        <div className=" h-full w-16 p-2 bg-blue-800 flex flex-col items-center ">
-          <div className=" w-full bg-white rounded flex items-center justify-center py-1">
+        <div className=" h-full w-16 p-2 pb-4  flex flex-col items-center bg-primary-900  ">
+          <div className=" w-8 h-8 bg-white rounded-full flex items-center justify-center py-1">
             <RedisIcon></RedisIcon>
           </div>
 
-          <div className=" flex-1 flex flex-col gap-2 mt-6 ">
-            <div className=" text-white hover:bg-blue-900 p-3 ">
+          <div className=" flex-1 flex flex-col gap-2 mt-6  ">
+            <div className=" text-white hover:bg-primary-700 p-3 rounded ">
               <Link href={"/data"}>
                 <HomeIcon className=" text-2xl"></HomeIcon>
               </Link>
             </div>
-            <div className=" text-white hover:bg-blue-900 p-3">
+            <div className="text-white hover:bg-primary-700 p-3 rounded">
               <Link href={"/setting"}>
                 <DataAnalyzeIcon className=" text-2xl"></DataAnalyzeIcon>
               </Link>
             </div>
-            <div className=" text-white hover:bg-blue-900 p-3">
-              <Link href={"/setting"}>
+            <div className="text-white hover:bg-primary-700 p-3  rounded">
+              <Link href={"/analyze"}>
                 <SetIcon className=" text-2xl"></SetIcon>
               </Link>
             </div>

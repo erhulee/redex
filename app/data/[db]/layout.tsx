@@ -1,5 +1,6 @@
 "use client";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
+import { ConfigProvider } from "antd";
 const queryClient = new QueryClient();
 
 export default function RootLayout({
@@ -9,10 +10,16 @@ export default function RootLayout({
 }) {
   return (
     <QueryClientProvider client={queryClient}>
-      <div className=" flex flex-col">
-        <div className=" font-semibold p-2 text-lg ">数据管理</div>
-        <div className=" flex-1"> {children}</div>
-      </div>
+      <ConfigProvider
+        theme={{
+          token: {
+            // Seed Token，影响范围大
+            colorPrimary: "#2546B5",
+          },
+        }}
+      >
+        <div className=" h-full"> {children}</div>
+      </ConfigProvider>
     </QueryClientProvider>
   );
 }

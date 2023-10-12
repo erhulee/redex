@@ -7,11 +7,12 @@ import {
   getCurrentDBInfo,
   getCurrentDBKeys,
 } from "./api";
+import Spin from "./components/spin";
 import { useQuery } from "@tanstack/react-query";
 import { useMemo, useState } from "react";
-import Spin from "./components/spin";
 import { EnvContextProvider } from "./context";
 import { getKeyValue } from "./api/key";
+import ConnectList from "./components/ConnectList";
 type Props = {
   params: {
     db: number;
@@ -59,38 +60,51 @@ export default function DashBoard(props: Props) {
     refetchOnWindowFocus: false,
   });
 
-  console.log("valueQuery:", valueQuery.data);
-
   const createKey2 = (key: string, type: any) => {
     return createOneKey(key, type, db);
   };
   return (
     <EnvContextProvider value={env}>
-      <div className="flex flex-row h-full ">
-        <DBList
-          currentDB={dbQuery.data.currentDB}
-          list={dbQuery.data.DBListData}
-          className=" h-full border-r bg-slate-50 mr-4"
-        ></DBList>
-        <KeyList
-          list={keysQuery.data.keysData}
-          className=" mt-4 border-r-2 pr-2"
-          pattern={pattern}
-          onChange={setPattern}
-          onCreate={createKey2}
-        ></KeyList>
-        {valueQuery.isLoading ? (
-          <Spin></Spin>
-        ) : (
-          <KVEditor
-            type={valueQuery.data?.data.type}
-            db={db}
-            value={valueQuery.data?.data?.value}
-            keyExpire={valueQuery.data?.data.expire}
-            keyName={key!}
-            refetch={valueQuery.refetch}
-          ></KVEditor>
-        )}
+      <div className="flex flex-row h-full bg-zinc-100 p-2">
+        <aside className=" flex flex-col ">
+          <div className="bg-white m-2 rounded-lg shadow-lg flex-1 ">
+            <ConnectList></ConnectList>
+          </div>
+
+          <div className="bg-white m-2 rounded-lg shadow-lg  flex-1  ">
+            <DBList
+              currentDB={dbQuery.data.currentDB}
+              list={dbQuery.data.DBListData}
+              className="gap-1"
+            ></DBList>
+          </div>
+        </aside>
+        <aside className="flex flex-row bg-white m-2 rounded-lg shadow-lg p-4">
+          <KeyList
+            list={keysQuery.data.keysData}
+            className=" mt-4 "
+            pattern={pattern}
+            onChange={setPattern}
+            onCreate={createKey2}
+          ></KeyList>
+        </aside>
+
+        <div className="main flex-1">
+          <div className=" bg-white h-1/2 m-2 p-2 rounded-lg shadow-lg ">
+            {valueQuery.isLoading ? (
+              <Spin></Spin>
+            ) : (
+              <KVEditor
+                type={valueQuery.data?.data.type}
+                db={db}
+                value={valueQuery.data?.data?.value}
+                keyExpire={valueQuery.data?.data.expire}
+                keyName={key!}
+                refetch={valueQuery.refetch}
+              ></KVEditor>
+            )}
+          </div>
+        </div>
       </div>
     </EnvContextProvider>
   );
