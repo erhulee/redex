@@ -1,23 +1,26 @@
 import { Button, Table } from "antd";
 import { DeleteOutlined, FormOutlined } from "@ant-design/icons";
 
-function ZSetEditor() {
-  const dataSource = [
-    {
-      id: 1,
-      value: "a",
-    },
-  ];
+function ZSetEditor(props: {
+  value: {
+    size: number;
+    value: Array<{
+      element: string;
+      score: number | string;
+    }>;
+  };
+}) {
+  const dataSource = props.value.value;
   const columns = [
     {
-      title: "ID",
-      dataIndex: "id",
-      key: "id",
+      title: "score",
+      dataIndex: "score",
+      key: "score",
     },
     {
-      title: "Value",
-      dataIndex: "value",
-      key: "value",
+      title: "value",
+      dataIndex: "element",
+      key: "element",
     },
     {
       title: "操作",

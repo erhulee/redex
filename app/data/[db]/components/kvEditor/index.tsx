@@ -9,10 +9,11 @@ import { setExpire } from "../../api/expire";
 import { deleteKey, setName } from "../../api/key";
 import { setKeyValue } from "../../api";
 import SetEditor from "./SetEditor";
+import ZSetEditor from "./ZSetEditor";
 
 function KVEditor(props: Editor.EditorProps & { refetch: () => void }) {
   const { db, keyName, keyExpire, type, refetch } = props;
-  console.log(props);
+  console.log(props.value);
   const handleChangeName = (name: string) => {
     setName(keyName, db, name);
   };
@@ -51,6 +52,8 @@ function KVEditor(props: Editor.EditorProps & { refetch: () => void }) {
         return <ListEditor value={props.value}></ListEditor>;
       case "set":
         return <SetEditor></SetEditor>;
+      case "zset":
+        return <ZSetEditor value={props.value}></ZSetEditor>;
       default:
         return <Error></Error>;
     }

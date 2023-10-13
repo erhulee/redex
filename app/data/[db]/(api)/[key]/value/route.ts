@@ -1,6 +1,13 @@
 import MRedis from "@/lib/redis";
 import { isValidate } from "../util";
-
+/*
+    params: {
+        key:   string
+        field: string
+        value: string
+        action: enum
+    }
+*/
 export async function POST(request: Request, ctx: { params: { key: string, db: number } }) {
     const db = ctx.params.db;
     if (!isValidate(db)) {
@@ -35,6 +42,7 @@ export async function POST(request: Request, ctx: { params: { key: string, db: n
         case 'list':
             let length = await redis.llen(key);
             result = await redis.lrange(key, 0, length - 1);
+
     }
 
     return Response.json({
@@ -51,6 +59,9 @@ export async function GET(request: Request, ctx: { params: { key: string } }) {
     const key = ctx.params.key;
     const type = await redis.type(key);
     let result = null
+    let size = 0
+    let list = []
+
     switch (type) {
         case "hash":
             result = await redis.hgetall(key)
@@ -59,12 +70,29 @@ export async function GET(request: Request, ctx: { params: { key: string } }) {
             result = await redis.get(key)
             break;
         case 'list':
-            let length = await redis.llen(key);
-            const list = await redis.lrange(key, 0, length - 1);
+            size = await redis.llen(key);
+            list = await redis.lrange(key, 0, size - 1);
             result = {
                 count: length,
                 value: list.map((val, index) => ({ value: val, id: index }))
             }
+            break
+        case "zset":
+            size = await redis.zcard(key);
+            list = await redis.zrange(key, 0, size, "WITHSCORES");
+
+            const zsetList = [];
+            for (let i = 0; i < list.length; i += 2) {
+                zsetList.push({
+                    element: list[i],
+                    score: list[i + 1]
+                })
+            }
+            result = {
+                size: size,
+                value: zsetList
+            }
+            break
     }
 
     const ttl = await redis.ttl(key);

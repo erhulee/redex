@@ -90,7 +90,7 @@ export default function DashBoard(props: Props) {
         </aside>
 
         <div className="main flex-1">
-          <div className=" bg-white h-1/2 m-2 p-2 rounded-lg shadow-lg ">
+          <div className=" bg-white h-1/2 m-2 p-2 rounded-lg shadow-lg">
             {valueQuery.isLoading ? (
               <Spin></Spin>
             ) : (
