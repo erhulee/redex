@@ -2,7 +2,7 @@
 import BaseInfoBar from "./baseInfoBar";
 import HashEditor from "./hashEditor";
 import ListEditor from "./listEditor";
-import StringEditor from "./stringEditor";
+import StringEditor from "./StringEditor";
 import { Editor } from "./type";
 import Error from "./error";
 import { setExpire } from "../../api/expire";

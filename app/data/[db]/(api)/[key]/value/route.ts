@@ -73,7 +73,7 @@ export async function GET(request: Request, ctx: { params: { key: string } }) {
             size = await redis.llen(key);
             list = await redis.lrange(key, 0, size - 1);
             result = {
-                count: length,
+                count: size,
                 value: list.map((val, index) => ({ value: val, id: index }))
             }
             break
