@@ -5,6 +5,7 @@ import "./index.css";
 import { usePathname, useRouter, useSearchParams } from "next/navigation";
 import useModal from "@/app/data/hooks/useModal";
 import CreateForm from "./CreateForm";
+import { FileExcelOutlined, PlusOutlined } from "@ant-design/icons";
 type Props = {
   list: KeyItem[];
   pattern: string;
@@ -25,9 +26,18 @@ const KeyList: React.FC<Props> = (props) => {
   return (
     <div className={` w-64 ${props.className}`}>
       <div className="mb-2">
-        <Button type="primary" className=" w-full mb-1" onClick={toggleVisible}>
-          新建Key
-        </Button>
+        <div className=" flex gap-2">
+          <Button
+            type="primary"
+            className=" w-full mb-1"
+            onClick={toggleVisible}
+            icon={<PlusOutlined />}
+          >
+            新建
+          </Button>
+          <Button icon={<FileExcelOutlined />}>导入</Button>
+        </div>
+
         <div className=" flex">
           <Input.Search
             defaultValue={props.pattern}

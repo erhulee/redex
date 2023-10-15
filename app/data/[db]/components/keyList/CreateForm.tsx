@@ -1,7 +1,16 @@
-import { Form, Input, Modal, Select } from "antd";
+import { Form, Input, Modal, Select, Switch } from "antd";
 const Item = Form.Item;
 const useForm = Form.useForm;
-const options = ["string", "set", "list"].map((i) => ({ value: i, label: i }));
+const options = [
+  "string",
+  "set",
+  "list",
+  "hash",
+  "zset",
+  "bitmaps",
+  "hyperloglogs",
+  "streams",
+].map((i) => ({ value: i, label: i }));
 function CreateForm(props: {
   visible: boolean;
   toggle: () => void;
@@ -27,12 +36,15 @@ function CreateForm(props: {
       onOk={handleModalConfirm}
       cancelText="退出"
     >
-      <Form form={form}>
-        <Item label="Key" required name="key">
+      <Form form={form} labelCol={{ span: 3 }}>
+        <Item label="KEY" required name="key">
           <Input></Input>
         </Item>
-        <Item label="type" required name="type">
+        <Item label="类型" required name="type">
           <Select options={options}></Select>
+        </Item>
+        <Item label="覆盖" name="override">
+          <Switch className=" bg-slate-500"></Switch>
         </Item>
       </Form>
     </Modal>

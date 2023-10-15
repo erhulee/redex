@@ -13,6 +13,8 @@ import { useMemo, useState } from "react";
 import { EnvContextProvider } from "./context";
 import { getKeyValue } from "./api/key";
 import ConnectList from "./components/ConnectList";
+import XTerminal from "@/app/components/XTerminal";
+import Monitor from "./components/Monitor";
 type Props = {
   params: {
     db: number;
@@ -23,8 +25,8 @@ type Props = {
 };
 
 export default function DashBoard(props: Props) {
-  const { db } = props.params;
   const { key } = props.searchParams;
+  const { db } = props.params;
   const [pattern, setPattern] = useState("*");
   const env = useMemo(
     () => ({
@@ -66,7 +68,7 @@ export default function DashBoard(props: Props) {
   return (
     <EnvContextProvider value={env}>
       <div className="flex flex-row h-full bg-zinc-100 p-2">
-        <aside className=" flex flex-col ">
+        <aside className=" flex flex-col w-56 ">
           <div className="bg-white m-2 rounded-lg shadow-lg flex-1 ">
             <ConnectList></ConnectList>
           </div>
@@ -89,8 +91,8 @@ export default function DashBoard(props: Props) {
           ></KeyList>
         </aside>
 
-        <div className="main flex-1">
-          <div className=" bg-white h-1/2 m-2 p-2 rounded-lg shadow-lg">
+        <div className="main flex-1 flex flex-col">
+          <div className=" bg-white m-2 p-2 rounded-lg shadow-lg">
             {valueQuery.isLoading ? (
               <Spin></Spin>
             ) : (
@@ -104,6 +106,13 @@ export default function DashBoard(props: Props) {
               ></KVEditor>
             )}
           </div>
+
+          {/* <div className=" m-2 mt-4 rounded-md overflow-hidden p-2 pb-0 flex-1 flex flex-row">
+            <XTerminal></XTerminal>
+            <div className=" flex-1  shadow-lg rounded-md p-2 bg-white border border-zinc-100">
+              <Monitor></Monitor>
+            </div>
+          </div> */}
         </div>
       </div>
     </EnvContextProvider>

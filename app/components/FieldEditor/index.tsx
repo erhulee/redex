@@ -21,7 +21,7 @@ function FieldEditor(props: Props) {
         </Form.Item>
         <Form.Item label="value">
           {mode == "json" ? (
-            <JsonEditor></JsonEditor>
+            <JsonEditor width={800}></JsonEditor>
           ) : (
             <Input.TextArea></Input.TextArea>
           )}

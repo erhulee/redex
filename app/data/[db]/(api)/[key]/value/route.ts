@@ -8,8 +8,23 @@ import { isValidate } from "../util";
         action: enum
     }
 */
+
+export type ListUpdateParams = {
+    type: "list",
+    add_mode: "left" | "right",
+    element: string
+}
+
+export type StringUpdateParams = {
+    type: "string",
+    value: string
+}
+
+type KeyUpdateParams = ListUpdateParams | StringUpdateParams
 export async function POST(request: Request, ctx: { params: { key: string, db: number } }) {
     const db = ctx.params.db;
+    const key = ctx.params.key;
+
     if (!isValidate(db)) {
         return Response.json({
             code: -1,
@@ -17,32 +32,27 @@ export async function POST(request: Request, ctx: { params: { key: string, db: n
         })
     }
     const redis = MRedis.instanceGroup[ctx.params.db];
-    let body: Partial<{ type: string, value: any }> = {}
-    try {
-        body = JSON.parse((await request.body?.getReader().read())?.value?.toString() || "{}")
-    } catch {
-        return Response.json({
-            code: -1,
-            msg: "参数错误"
-        })
-    }
-
-    const value = body.value;
+    let body: KeyUpdateParams = await request.json();
     const type = body.type;
-    const key = ctx.params.key;
 
     let result = null
     switch (type) {
         case "hash":
-            result = await redis.hmset(key, value);
+            // result = await redis.hmset(key, value);
             break;
         case "string":
-            result = await redis.set(key, value);
+            // result = await redis.set(key, value);
             break;
         case 'list':
-            let length = await redis.llen(key);
-            result = await redis.lrange(key, 0, length - 1);
-
+            const { add_mode = 'left', element } = body;
+            console.log("add_mode:", add_mode)
+            if (add_mode == "left") {
+                result = await redis.lpush(key, element);
+            }
+            if (add_mode == "right") {
+                result = await redis.rpush(key, element);
+            }
+            break;
     }
 
     return Response.json({
@@ -106,4 +116,32 @@ export async function GET(request: Request, ctx: { params: { key: string } }) {
     })
 }
 
+
+export type ListDeleteParams = {
+    type: "list",
+    delete_count: "one" | "all",
+    element: string
+}
+type KeyDeleteParams = ListDeleteParams
+export async function DELETE(request: Request, ctx: { params: { key: string, db: number } }) {
+    const { db, key } = ctx.params;
+    const body: KeyDeleteParams = await request.json();
+    const type = body.type;
+    const redis = MRedis.instanceGroup[db];
+    let result = null
+    switch (type) {
+        case "list":
+            const { delete_count, element } = body
+            if (delete_count == "all") {
+                // TODO
+            } else {
+                result = await redis.lrem(key, 1, element)
+            }
+    }
+
+    return Response.json({
+        type,
+        data: result
+    })
+}
 

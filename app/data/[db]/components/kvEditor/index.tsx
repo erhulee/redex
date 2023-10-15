@@ -1,7 +1,7 @@
 "use client";
 import BaseInfoBar from "./baseInfoBar";
 import HashEditor from "./hashEditor";
-import ListEditor from "./listEditor";
+import ListEditor from "./ListEditor";
 import StringEditor from "./StringEditor";
 import { Editor } from "./type";
 import Error from "./error";
@@ -10,10 +10,11 @@ import { deleteKey, setName } from "../../api/key";
 import { setKeyValue } from "../../api";
 import SetEditor from "./SetEditor";
 import ZSetEditor from "./ZSetEditor";
+import { ListUpdateParams } from "../../(api)/[key]/value/route";
+import { addListItem } from "../../api/list";
 
 function KVEditor(props: Editor.EditorProps & { refetch: () => void }) {
   const { db, keyName, keyExpire, type, refetch } = props;
-  console.log(props.value);
   const handleChangeName = (name: string) => {
     setName(keyName, db, name);
   };
@@ -22,10 +23,26 @@ function KVEditor(props: Editor.EditorProps & { refetch: () => void }) {
     setExpire(keyName, db, expire);
   };
 
-  const handleChangeValue = (type: string, value: any) => {
+  const handleChangeValue = (
+    type: Pick<ListUpdateParams, "type">,
+    value: Omit<ListUpdateParams, "type">
+  ) => {
     switch (type) {
+      case "list":
+        addListItem(
+          {
+            db,
+            key: keyName,
+          },
+          {
+            type: "list",
+            ...value,
+          }
+        );
+        break;
       case "string":
         setKeyValue(db, keyName, type, value);
+        break;
     }
   };
   const handleDeleteKey = () => {
@@ -49,7 +66,12 @@ function KVEditor(props: Editor.EditorProps & { refetch: () => void }) {
           ></HashEditor>
         );
       case "list":
-        return <ListEditor value={props.value}></ListEditor>;
+        return (
+          <ListEditor
+            value={props.value}
+            onAddItem={(value) => handleChangeValue("list", value)}
+          ></ListEditor>
+        );
       case "set":
         return <SetEditor></SetEditor>;
       case "zset":

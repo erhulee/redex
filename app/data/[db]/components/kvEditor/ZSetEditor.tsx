@@ -51,7 +51,7 @@ function ZSetEditor(props: {
         </div>
       </div>
       <Table dataSource={dataSource} columns={columns} />
-      <Modal open title="修改数据" width={800}>
+      <Modal open title="修改数据" width={900}>
         <FieldEditor mode="json"></FieldEditor>
       </Modal>
     </div>

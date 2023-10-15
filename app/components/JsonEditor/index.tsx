@@ -8,6 +8,7 @@ import useLocalSetting from "./useLocalSetting";
 type Props = {
   handleChangeValue: (value: string) => void;
   value: string;
+  width: number;
 };
 function JsonEditor(props: Props) {
   const { handleChangeValue, value } = props;
@@ -53,8 +54,9 @@ function JsonEditor(props: Props) {
         theme="dracula"
         name="UNIQUE_ID_OF_DIV"
         fontSize={16}
+        height="400px"
+        width={props.width + "px"}
         style={{
-          width: "100%",
           borderRadius: "5px",
         }}
         value={content}
