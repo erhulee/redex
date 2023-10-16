@@ -2,7 +2,7 @@ import AceEditor from "react-ace";
 import "ace-builds/src-noconflict/mode-json";
 import "ace-builds/src-noconflict/theme-dracula";
 import "ace-builds/src-noconflict/ext-language_tools";
-import { useRef, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { Switch } from "antd";
 import useLocalSetting from "./useLocalSetting";
 type Props = {
@@ -18,6 +18,10 @@ function JsonEditor(props: Props) {
     { json_formate: true },
     "json_editor"
   );
+
+  useEffect(() => {
+    setContent(props.value);
+  }, [props.value]);
 
   const editorRef = useRef(null);
   const handleChangeValueWithFormate = () => {

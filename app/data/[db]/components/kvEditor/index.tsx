@@ -11,10 +11,12 @@ import { setKeyValue } from "../../api";
 import SetEditor from "./SetEditor";
 import ZSetEditor from "./ZSetEditor";
 import { ListUpdateParams } from "../../(api)/[key]/value/route";
-import { addListItem } from "../../api/list";
+import { addListItem, updateListItemByIndex } from "../../api/list";
+import useEnv from "@/app/data/hooks/useEnv";
 
 function KVEditor(props: Editor.EditorProps & { refetch: () => void }) {
   const { db, keyName, keyExpire, type, refetch } = props;
+  const env = useEnv();
   const handleChangeName = (name: string) => {
     setName(keyName, db, name);
   };
@@ -44,6 +46,24 @@ function KVEditor(props: Editor.EditorProps & { refetch: () => void }) {
         setKeyValue(db, keyName, type, value);
         break;
     }
+
+    refetch();
+  };
+
+  const handleChangeFieldByIndex = (
+    type: string,
+    index: number,
+    value: string
+  ) => {
+    switch (type) {
+      case "list":
+        updateListItemByIndex(env, {
+          type: "list",
+          element: value,
+          index: index,
+        });
+    }
+    refetch();
   };
   const handleDeleteKey = () => {
     deleteKey(keyName, db);
@@ -70,6 +90,9 @@ function KVEditor(props: Editor.EditorProps & { refetch: () => void }) {
           <ListEditor
             value={props.value}
             onAddItem={(value) => handleChangeValue("list", value)}
+            onIndexChange={(index, value) =>
+              handleChangeFieldByIndex("list", index, value)
+            }
           ></ListEditor>
         );
       case "set":

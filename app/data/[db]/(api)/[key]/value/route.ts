@@ -9,6 +9,26 @@ import { isValidate } from "../util";
     }
 */
 
+export type ListItemUpdateParams = {
+    type: "list",
+    index: number,
+    element: string
+}
+type keyContentChangeParams = ListItemUpdateParams
+export async function POST(request: Request, ctx: { params: { key: string, db: number } }) {
+    const { key, db } = ctx.params
+    const body: keyContentChangeParams = await request.json();
+    const redis = MRedis.instanceGroup[db];
+    const type = body.type;
+    switch (type) {
+        case "list":
+            return Response.json({
+                code: 0,
+                data: await redis.lset(key, body.index, body.element)
+            })
+    }
+}
+
 export type ListUpdateParams = {
     type: "list",
     add_mode: "left" | "right",
@@ -20,8 +40,8 @@ export type StringUpdateParams = {
     value: string
 }
 
-type KeyUpdateParams = ListUpdateParams | StringUpdateParams
-export async function POST(request: Request, ctx: { params: { key: string, db: number } }) {
+type KeyContentAddParams = ListUpdateParams | StringUpdateParams
+export async function PUT(request: Request, ctx: { params: { key: string, db: number } }) {
     const db = ctx.params.db;
     const key = ctx.params.key;
 
@@ -32,7 +52,7 @@ export async function POST(request: Request, ctx: { params: { key: string, db: n
         })
     }
     const redis = MRedis.instanceGroup[ctx.params.db];
-    let body: KeyUpdateParams = await request.json();
+    let body: KeyContentAddParams = await request.json();
     const type = body.type;
 
     let result = null

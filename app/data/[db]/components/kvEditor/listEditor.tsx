@@ -1,12 +1,10 @@
-import { Button, Form, Input, Modal, Select, Table, Tooltip } from "antd";
+import { Button, Form, Input, Modal, Select, Table } from "antd";
 import { DeleteOutlined, FormOutlined } from "@ant-design/icons";
 import JsonEditor from "@/app/components/JsonEditor";
 import useModal from "@/app/data/hooks/useModal";
 import { useState } from "react";
 import { deleteListItem } from "../../api/list";
-import { useParams, useSearchParams } from "next/navigation";
 import useEnv from "@/app/data/hooks/useEnv";
-const useForm = Form.useForm;
 type Props = {
   value: {
     count: number;
@@ -23,9 +21,17 @@ type Props = {
 
 function ListEditor(props: Props) {
   const { value, onAddItem, onIndexChange, onIndexDelete } = props;
-  const [visible, toggle] = useModal();
+  const [createModalVisible, toggleCreateModal] = useModal();
+  const [updateModalVisible, toggleUpdateModal] = useModal();
+  // create
   const [jsonData, setJSONData] = useState("");
   const [insertType, setInsertType] = useState("left");
+
+  // update
+  const [updateForm, setUpdateForm] = useState({
+    index: 0,
+    content: "",
+  });
   const env = useEnv();
   const handleCreate = () => {
     const add_mode = insertType;
@@ -34,7 +40,12 @@ function ListEditor(props: Props) {
       add_mode,
       element,
     });
-    toggle();
+    toggleCreateModal();
+  };
+
+  const handleUpdate = () => {
+    onIndexChange(updateForm.index, updateForm.content);
+    toggleUpdateModal();
   };
 
   const handleDeleteElement = (element: string) => {
@@ -56,10 +67,20 @@ function ListEditor(props: Props) {
       title: "操作",
       key: "action",
       render: (element: any) => {
-        const { value } = element;
+        const { value, id } = element;
         return (
           <div>
-            <Button icon={<FormOutlined />} className=" mr-2"></Button>
+            <Button
+              icon={<FormOutlined />}
+              onClick={() => {
+                setUpdateForm({
+                  index: id,
+                  content: value,
+                });
+                toggleUpdateModal();
+              }}
+              className=" mr-2"
+            ></Button>
             <Button
               icon={<DeleteOutlined />}
               onClick={() => handleDeleteElement(value)}
@@ -81,17 +102,17 @@ function ListEditor(props: Props) {
         <div className=" w-44 mr-4 ">
           <Input.Search placeholder="eg. 1,1-2"></Input.Search>
         </div>
-        <Button onClick={toggle}>添加记录</Button>
+        <Button onClick={toggleCreateModal}>添加记录</Button>
       </div>
       <Table dataSource={value.value} columns={columns} />
 
       <Modal
-        open={visible}
+        open={createModalVisible}
         title="添加记录"
         width={1200}
         okText="创建"
         cancelText="取消"
-        onCancel={toggle}
+        onCancel={toggleCreateModal}
         onOk={handleCreate}
       >
         <Form.Item label="插入方式">
@@ -100,10 +121,35 @@ function ListEditor(props: Props) {
             <Select.Option key={"right"}>从右插入</Select.Option>
           </Select>
         </Form.Item>
-        <Form.Item label="插入字符">
+        <Form.Item label="内容字符">
           <JsonEditor
             value={jsonData}
             handleChangeValue={setJSONData}
+          ></JsonEditor>
+        </Form.Item>
+      </Modal>
+
+      <Modal
+        open={updateModalVisible}
+        title="更新记录"
+        width={1200}
+        okText="更新"
+        cancelText="取消"
+        onCancel={toggleUpdateModal}
+        onOk={handleUpdate}
+      >
+        <Form.Item label="更新索引">
+          <Input disabled value={updateForm.index}></Input>
+        </Form.Item>
+        <Form.Item label="内容字符">
+          <JsonEditor
+            value={updateForm.content}
+            handleChangeValue={(val) => {
+              setUpdateForm({
+                index: updateForm.index,
+                content: val,
+              });
+            }}
           ></JsonEditor>
         </Form.Item>
       </Modal>
