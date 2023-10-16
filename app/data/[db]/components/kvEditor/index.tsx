@@ -98,7 +98,7 @@ function KVEditor(props: Editor.EditorProps & { refetch: () => void }) {
       case "set":
         return <SetEditor></SetEditor>;
       case "zset":
-        return <ZSetEditor value={props.value}></ZSetEditor>;
+        return <ZSetEditor value={props.value} refetch={refetch}></ZSetEditor>;
       default:
         return <Error></Error>;
     }

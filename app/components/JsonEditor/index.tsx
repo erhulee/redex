@@ -8,7 +8,7 @@ import useLocalSetting from "./useLocalSetting";
 type Props = {
   handleChangeValue: (value: string) => void;
   value: string;
-  width: number;
+  width?: number;
 };
 function JsonEditor(props: Props) {
   const { handleChangeValue, value } = props;
@@ -25,6 +25,7 @@ function JsonEditor(props: Props) {
 
   const editorRef = useRef(null);
   const handleChangeValueWithFormate = () => {
+    console.log("handleChangeValueWithFormate");
     if (setting.json_formate) {
       try {
         const obj = JSON.parse(content);

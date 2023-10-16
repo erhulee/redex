@@ -1,0 +1,1 @@
+export type ENV = { db: number, key: string }

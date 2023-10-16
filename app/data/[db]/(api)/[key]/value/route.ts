@@ -14,6 +14,7 @@ export type ListItemUpdateParams = {
     index: number,
     element: string
 }
+
 type keyContentChangeParams = ListItemUpdateParams
 export async function POST(request: Request, ctx: { params: { key: string, db: number } }) {
     const { key, db } = ctx.params
@@ -29,18 +30,23 @@ export async function POST(request: Request, ctx: { params: { key: string, db: n
     }
 }
 
+
+// PUT：增加ITEM
 export type ListUpdateParams = {
     type: "list",
     add_mode: "left" | "right",
     element: string
 }
-
 export type StringUpdateParams = {
     type: "string",
     value: string
 }
-
-type KeyContentAddParams = ListUpdateParams | StringUpdateParams
+export type ZSetAppendParams = {
+    type: "zset",
+    element: string,
+    score: string
+}
+type KeyContentAddParams = ListUpdateParams | StringUpdateParams | ZSetAppendParams
 export async function PUT(request: Request, ctx: { params: { key: string, db: number } }) {
     const db = ctx.params.db;
     const key = ctx.params.key;
@@ -57,15 +63,11 @@ export async function PUT(request: Request, ctx: { params: { key: string, db: nu
 
     let result = null
     switch (type) {
-        case "hash":
-            // result = await redis.hmset(key, value);
-            break;
         case "string":
             // result = await redis.set(key, value);
             break;
         case 'list':
             const { add_mode = 'left', element } = body;
-            console.log("add_mode:", add_mode)
             if (add_mode == "left") {
                 result = await redis.lpush(key, element);
             }
@@ -73,6 +75,9 @@ export async function PUT(request: Request, ctx: { params: { key: string, db: nu
                 result = await redis.rpush(key, element);
             }
             break;
+        case "zset":
+            result = await redis.zadd(key, body.score, body.element)
+
     }
 
     return Response.json({
@@ -142,7 +147,11 @@ export type ListDeleteParams = {
     delete_count: "one" | "all",
     element: string
 }
-type KeyDeleteParams = ListDeleteParams
+export type ZSetDeleteParams = {
+    type: "zset",
+    element: string
+}
+type KeyDeleteParams = ListDeleteParams | ZSetDeleteParams
 export async function DELETE(request: Request, ctx: { params: { key: string, db: number } }) {
     const { db, key } = ctx.params;
     const body: KeyDeleteParams = await request.json();
@@ -157,6 +166,9 @@ export async function DELETE(request: Request, ctx: { params: { key: string, db:
             } else {
                 result = await redis.lrem(key, 1, element)
             }
+            break;
+        case "zset":
+            result = await redis.zrem(key, body.element)
     }
 
     return Response.json({
